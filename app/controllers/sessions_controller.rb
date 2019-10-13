@@ -1,4 +1,4 @@
-class Api::V1::SessionsController < ApplicationController
+class SessionsController < ApplicationController
 
 
 	def create
@@ -16,8 +16,12 @@ class Api::V1::SessionsController < ApplicationController
 end
 
 	def get_current_user
+		current_uri = request.env['PATH_INFO']
 		if logged_in?
 			render json: UserSerializer.new(current_user)
+		elsif 
+			current_uri == "/" || "/signup" || "/login"
+			render :nothing => true, :status => 204
 		else
 			render json: {
 				error: "Please Log in!"

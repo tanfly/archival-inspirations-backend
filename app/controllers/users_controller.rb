@@ -1,4 +1,6 @@
-class Api::V1::UsersController < ApplicationController
+class UsersController < ApplicationController
+  wrap_parameters :user, include: [:username, :email, :password, :avatar]
+  before_action :set_user, only: [:show, :update, :destroy]
 
     def index 
         users = User.all 
@@ -18,6 +20,7 @@ class Api::V1::UsersController < ApplicationController
 
     def create
         user = User.new(user_params)
+        byebug
         if user.save
           render json: UserSerializer.new(user)
         end
@@ -42,7 +45,7 @@ class Api::V1::UsersController < ApplicationController
     private
   
     def user_params
-      params.require(:user).permit(:username, :email, :password, :avatar, :favorites, :posts)
+      params.require(:user).permit(:username, :email, :password, :avatar)
     end
         
 

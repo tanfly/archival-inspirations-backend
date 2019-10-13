@@ -1,48 +1,74 @@
 class PostsController < ApplicationController
-
-    def index 
-        user = User.find(params[:user_id])
-        posts = user.posts
-        favorites = user.favorites
-        render json: PostSerializer.new(worlds)
-    end
-
-    def show
-        post = Post.find(params[:id])
-        options = {
-            include: [:favorites]
-        }
-        render json: PostSerializer.new(post, options)
-    end
-
-    def create
-        post = Post.new(post_params)
-        if post.save
-          render json: PostSerializer.new(post)
+    before_action :set_post, only: [:show, :update, :destroy]
+  
+    def index
+      if logged_in?
+            if params[:user_id]
+                posts = current_user.posts
+                render json: PostSerializer.new(posts)
+            else 
+                posts = Posts.all
+                render json: PostSerializer.new(posts)
+            end
+        else
+            render json: {
+            error: "You must be logged in to see posts"
+            }
         end
     end
-
-    def update
-        post = Post.find(params[:id])
-        post.update(post_params)
-        if post.save
-            render json: PostSerializer.new(post), status: :accepted
-          else
-            render json: { errors: post.errors.full_messages }, status: :unprocessible_entity
-          end
+  
+    
+    def show
+      render json: PostSerializer.new(post)
     end
-
-    def destroy
-        post = Post.find(params[:id])
-        post.destroy
-        head 204
+  
+    
+    def create
+      
+      post = Post.new(post_params)
+  
+      if post.save
+        render json: PostSerializer.new(post), status: :created
+      else  
+        error_resp = {
+          error: post.errors.full_messages.to_sentence
+        }
+        render json: error_resp, status: :unprocessable_entity
       end
-
-
-    private
-
-    def world_params
-        params.require(:post).permit(:photo, :title, :description, :favorites, :time_period, :user_id)
     end
-
-end
+  
+    # PATCH/PUT /posts/1
+    def update
+      if post.update(post_params)
+        render json:PostSerializer.new(post)
+      else
+         error_resp = {
+          error: post.errors.full_messages.to_sentence
+        }
+        render json: error_resp, status: :unprocessable_entity
+      end
+    end
+  
+    # DELETE /trips/1
+    def destroy
+      if post.destroy
+        render json: {
+          message: "Post deleted!"
+        }
+  
+      else
+        error_resp = {
+          error: "Something went wrong!"
+        }
+      end
+    end
+  
+    private
+      def set_post
+        post = Post.find(params[:id])
+      end
+  
+      def post_params
+        params.require(:post).permit(:photo, :title, :description, :time_period, :user_id)
+      end
+  end
