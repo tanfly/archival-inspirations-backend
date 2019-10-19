@@ -37,7 +37,6 @@ class PostsController < ApplicationController
       end
     end
   
-    # PATCH/PUT /posts/1
     def update
       if @post.update(post_params)
         render json:PostSerializer.new(@post)
@@ -49,8 +48,8 @@ class PostsController < ApplicationController
       end
     end
   
-    # DELETE /trips/1
     def destroy
+      @post.destroy
       if @post.destroy
         render json: {
           message: "Post deleted!"
