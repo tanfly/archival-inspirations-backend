@@ -19,7 +19,7 @@ class PostsController < ApplicationController
   
     
     def show
-      render json: PostSerializer.new(post)
+      render json: PostSerializer.new(@post)
     end
   
     
@@ -39,11 +39,11 @@ class PostsController < ApplicationController
   
     # PATCH/PUT /posts/1
     def update
-      if post.update(post_params)
-        render json:PostSerializer.new(post)
+      if @post.update(post_params)
+        render json:PostSerializer.new(@post)
       else
          error_resp = {
-          error: post.errors.full_messages.to_sentence
+          error: @post.errors.full_messages.to_sentence
         }
         render json: error_resp, status: :unprocessable_entity
       end
@@ -51,7 +51,7 @@ class PostsController < ApplicationController
   
     # DELETE /trips/1
     def destroy
-      if post.destroy
+      if @post.destroy
         render json: {
           message: "Post deleted!"
         }
@@ -65,7 +65,7 @@ class PostsController < ApplicationController
   
     private
       def set_post
-        post = Post.find(params[:id])
+        @post = Post.find(params[:id])
       end
   
       def post_params
