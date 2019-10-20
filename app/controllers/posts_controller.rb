@@ -3,12 +3,13 @@ class PostsController < ApplicationController
   
     def index
       if logged_in?
-            if params[:user_id]
-                posts = current_user.posts
-                render json: PostSerializer.new(posts)
+        byebug
+            if request.url == "http://localhost:3001/posts"
+              posts = Post.all
+              render json: PostSerializer.new(posts)
             else
-                posts = Post.all
-                render json: PostSerializer.new(posts)
+              posts = current_user.posts
+              render json: PostSerializer.new(posts)
             end
         else
             render json: {
@@ -26,7 +27,6 @@ class PostsController < ApplicationController
     def create
       
       post = Post.new(post_params)
-  
       if post.save
         render json: PostSerializer.new(post), status: :created
       else  
