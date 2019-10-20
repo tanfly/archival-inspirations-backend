@@ -3,11 +3,10 @@ class PostsController < ApplicationController
   
     def index
       if logged_in?
-          binding.pry
             if params[:user_id]
                 posts = current_user.posts
                 render json: PostSerializer.new(posts)
-            else 
+            else
                 posts = Post.all
                 render json: PostSerializer.new(posts)
             end
