@@ -9,5 +9,8 @@ resources :users do
     resources :posts
 end
 
-resources :posts
+resources :posts do 
+    resource :favorite, only: [:create, :destroy]
+end
+
 end

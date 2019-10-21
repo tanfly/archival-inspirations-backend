@@ -5,16 +5,10 @@ class PostsController < ApplicationController
       if logged_in?
             if request.url == "http://localhost:3001/posts"
               posts = Post.all
-              options = {
-                include: [:favorites]
-              }
-              render json: PostSerializer.new(posts, options)
+              render json: PostSerializer.new(posts)
             else
               posts = current_user.posts
-              options = {
-                include: [:favorites]
-              }
-              render json: PostSerializer.new(posts, options)
+              render json: PostSerializer.new(posts)
             end
         else
             render json: {
