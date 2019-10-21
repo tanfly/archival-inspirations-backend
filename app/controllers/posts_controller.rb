@@ -3,7 +3,6 @@ class PostsController < ApplicationController
   
     def index
       if logged_in?
-        byebug
             if request.url == "http://localhost:3001/posts"
               posts = Post.all
               render json: PostSerializer.new(posts)
