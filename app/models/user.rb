@@ -12,8 +12,7 @@ class User < ApplicationRecord
     end
     
     def unfavorite(post)
-        Favorite.where(post: post).destroy_all
-        post.reload
+        Favorite.where(:user_id => self.id, :post => post).destroy_all
     end
 
     def favorited?(post)

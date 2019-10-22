@@ -6,6 +6,7 @@ class SessionsController < ApplicationController
 
 		if user && user.authenticate(params[:session][:password])
 			session[:user_id] = user.id
+			byebug
 			render json: UserSerializer.new(user)
 
 		else

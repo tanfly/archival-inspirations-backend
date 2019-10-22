@@ -4,17 +4,20 @@ class FavoritesController < ApplicationController
 
   
     def create
-        byebug
+      if session.loaded?
         current_user.favorite(@post)
     
         render json: PostSerializer.new(@post)
+      end
     end
   
     
     def destroy
+      if session.loaded?
         current_user.unfavorite(@post)
     
         render json: PostSerializer.new(@post)
+      end
     end
   
     private
